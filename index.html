@@ -1,1 +1,113 @@
-rgba4ie
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>rgba4ie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      #canvas-wrapper {
+      	background: url("http://placekitten.com/300/200") no-repeat;
+      	width: 300px;
+      	height: 158px;
+      	position: relative;
+      }
+      #canvas {
+      	top: 69px;
+      	left: 130px;
+      	position: absolute;
+      }
+    </style>
+    <!-- <link href="css/bootstrap-responsive.css" rel="stylesheet"> -->
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript">
+		generatePng = function() {
+			console.log("generate");
+			// cache variables
+			var red = document.getElementById("red").value;
+			var green = document.getElementById("green").value;
+			var blue = document.getElementById("blue").value;
+			var opacity = document.getElementById("opacity").value;
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext("2d");
+			// clear old canvas
+			context.clearRect(0, 0, canvas.width, canvas.width);
+			// fill with colors
+			context.fillStyle = "rgba(" + red + " , " + green + ", " + blue + ", " + opacity + ")";
+			// draw rectangle
+			context.fillRect(0, 0, canvas.width, canvas.width);
+			return false;
+		}
+		
+		downloadPng = function() {
+			console.log("download");
+			// open new window with png image
+			window.open(canvas.toDataURL("image/png"));
+		}
+    </script>
+  </head>
+
+  <body>
+
+    <div class="container">
+    	<h1>rgba4ie</h1>
+    	<div class="row">
+	    	<div class="span8">
+	    		<form class="form-horizontal">
+	    			<fieldset>
+	    				<legend>Settings</legend>
+	    				<div class="control-group">
+	    					<label class="control-label" for="red">RGB</label>
+	    					<div class="controls">
+	    						<input id="red" class="input-mini" type="number" max="255" min="0" value="0" />
+	    						<input id="green" class="input-mini" type="number" max="255" min="0" value="0" />
+	    						<input id="blue" class="input-mini" type="number" max="255" min="0" value="0" />
+	    						<p class="help-block">Choose between 0 and 255.</p>
+	    					</div>
+	    				</div>
+	    				<div class="control-group">
+	    					<label class="control-label" for="opacity">Opacity</label>
+	    					<div class="controls">
+	    						<input id="opacity" class="input-mini" type="number" max="1" step=".1" min="0" value="1" />
+	    						<p class="help-block">Choose between 0 and 1.</p>
+	    					</div>
+	    				</div>
+	    				<div class="form-actions">
+	    					<a id="submit" class="btn btn-primary" onclick="generatePng();">Generate image</a>
+	    				</div>
+	    			</fieldset>
+	    		</form>
+	    	</div>
+	      	<div id="canvas-view" class="span4">
+	      		<h2>Preview</h2>
+	      		<p id="canvas-wrapper">
+	      			<canvas id="canvas" width="40" height="40"></canvas>
+	      		</p>
+	      		<a id="download" class="btn btn-primary" onclick="downloadPng();">Download</a>
+	      	</div>
+	      	<div class="span8">
+	      		<div class="well">
+	      			<h2>Whats this?</h2>
+	      			<p>Problem: &lt; IE8 doesn't support CSS3 rgba(), so I need to create a png fallback each time I use rgba(). Quite tiresome to open Photoshop each time for such a small operation, so I created a simple HTML tool. </p>
+	      			<p class="alert notice">Note: Only canvas enabled browsers are supported. </p>
+	      			<h3>Todo</h3>
+	      			<ul>
+	      				<li>Set width and height of the image</li>
+	      				<li>Image behind preview should get brighter/darker based on the content of the canvas</li>
+	      				<li>Save <em>n</em> last used settings</li>
+	      				<li>"Download" should open a "Save as" dialog (use <a href="http://nihilogic.dk/labs/canvas2image/">Canvas2img</a>?)</li>
+	      			</ul>
+	      		</div>
+	      	</div>
+	  	</div>
+    </div> <!-- /container -->
+  </body>
+</html>
