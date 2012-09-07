@@ -11,7 +11,7 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
       #canvas-wrapper {
-      	background: url("http://placekitten.com/300/200") no-repeat;
+      	background: url("img/cat.jpeg") no-repeat;
       	width: 300px;
       	height: 158px;
       	position: relative;
@@ -28,37 +28,15 @@
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <script type="text/javascript">
-		generatePng = function() {
-			console.log("generate");
-			// cache variables
-			var red = document.getElementById("red").value;
-			var green = document.getElementById("green").value;
-			var blue = document.getElementById("blue").value;
-			var opacity = document.getElementById("opacity").value;
-			var canvas = document.getElementById("canvas");
-			var context = canvas.getContext("2d");
-			// clear old canvas
-			context.clearRect(0, 0, canvas.width, canvas.width);
-			// fill with colors
-			context.fillStyle = "rgba(" + red + " , " + green + ", " + blue + ", " + opacity + ")";
-			// draw rectangle
-			context.fillRect(0, 0, canvas.width, canvas.width);
-			return false;
-		}
-		
-		downloadPng = function() {
-			console.log("download");
-			// open new window with png image
-			window.open(canvas.toDataURL("image/png"));
-		}
-    </script>
+    
   </head>
 
   <body>
 
     <div class="container">
-    	<h1>rgba4ie</h1>
+    	<div class="page-header">
+    		<h1>rgba4ie</h1>
+    	</div>
     	<div class="row">
 	    	<div class="span8">
 	    		<form class="form-horizontal">
@@ -67,21 +45,21 @@
 	    				<div class="control-group">
 	    					<label class="control-label" for="red">RGB</label>
 	    					<div class="controls">
-	    						<input id="red" class="input-mini" type="number" max="255" min="0" value="0" />
-	    						<input id="green" class="input-mini" type="number" max="255" min="0" value="0" />
-	    						<input id="blue" class="input-mini" type="number" max="255" min="0" value="0" />
+	    						<input id="red" class="input-mini stepper" type="number" max="255" min="0" value="0" />
+	    						<input id="green" class="input-mini stepper" type="number" max="255" min="0" value="0" />
+	    						<input id="blue" class="input-mini stepper" type="number" max="255" min="0" value="0" />
 	    						<p class="help-block">Choose between 0 and 255.</p>
 	    					</div>
 	    				</div>
 	    				<div class="control-group">
 	    					<label class="control-label" for="opacity">Opacity</label>
 	    					<div class="controls">
-	    						<input id="opacity" class="input-mini" type="number" max="1" step=".1" min="0" value="1" />
+	    						<input id="opacity" class="input-mini stepper" type="number" max="1" step=".1" min="0" value="1" />
 	    						<p class="help-block">Choose between 0 and 1.</p>
 	    					</div>
 	    				</div>
 	    				<div class="form-actions">
-	    					<a id="submit" class="btn btn-primary" onclick="generatePng();">Generate image</a>
+	    					<a id="generate" class="btn btn-primary">Generate image</a>
 	    				</div>
 	    			</fieldset>
 	    		</form>
@@ -91,7 +69,7 @@
 	      		<p id="canvas-wrapper">
 	      			<canvas id="canvas" width="40" height="40"></canvas>
 	      		</p>
-	      		<a id="download" class="btn btn-primary" onclick="downloadPng();">Download</a>
+	      		<a id="download" class="btn btn-primary">Download</a>
 	      	</div>
 	      	<div class="span8">
 	      		<div class="well">
@@ -109,5 +87,64 @@
 	      	</div>
 	  	</div>
     </div> <!-- /container -->
+    <script type="text/javascript">
+    	window.onload = init;
+    	function init() {
+    		// cache variables
+    		var i, red, green, blue, opacity,
+    			_red = document.getElementById("red"), 
+    			_green = document.getElementById("green"), 
+    			_blue = document.getElementById("blue"),
+    			_opacity = document.getElementById("opacity"),
+    			steppers = document.getElementsByClassName("stepper");
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext("2d");
+			var generate = document.getElementById("generate");
+			var download = document.getElementById("download");
+
+			// listen for changes to color input
+			for(i = 0; i < steppers.length; i++){
+				steppers[i].addEventListener("change", function(e) {
+					setColors();
+					generatePng(canvas, context, red, green, blue, opacity);
+				});
+			}
+			
+			// listen for click on "generate image"
+			generate.addEventListener("click", function() {
+				setColors();
+				generatePng(canvas, context, red, green, blue, opacity);
+			});
+
+			// listen for click on "download"
+			download.addEventListener("click", function() {
+				downloadPng(canvas);
+			});
+
+			// private functions
+			function setColors() {
+				red = _red.value;
+				green = _green.value;
+				blue = _blue.value;
+				opacity = _opacity.value;
+			};
+
+			generatePng = function(canvas, context, red, green, blue, opacity) {
+				// clear old canvas
+				context.clearRect(0, 0, canvas.width, canvas.width);
+				// fill with colors
+				context.fillStyle = "rgba(" + red + " , " + green + ", " + blue + ", " + opacity + ")";
+				// draw rectangle
+				context.fillRect(0, 0, canvas.width, canvas.width);
+				return false;
+			};
+			
+			downloadPng = function(canvas) {
+				// open new window with png image
+				window.open(canvas.toDataURL("image/png"));
+			};
+    	};
+
+    </script>
   </body>
 </html>
